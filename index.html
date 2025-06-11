@@ -1,0 +1,1021 @@
+<!-- Main Calculator Section -->
+<div id="presupuesto-section" class="presupuesto-container min-h-screen bg-gray-50">
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-800">Calculadora de Presupuestos</h1>
+            <div class="flex items-center">
+                <span id="user-display" class="mr-4 text-gray-600"></span>
+                <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded transition-all">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Tabs Navigation -->
+        <div class="flex mb-0">
+            <div class="tab active" data-tab="informacion">Información</div>
+            <div class="tab" data-tab="bienvenida">Área de Bienvenida</div>
+            <div class="tab" data-tab="ceremonia">Área de Ceremonia</div>
+            <div class="tab" data-tab="recepcion">Área de Recepción</div>
+            <div class="tab" data-tab="servicios">Servicios Técnicos</div>
+            <div class="tab" data-tab="bizcocho">Área de Bizcocho</div>
+            <div class="tab" data-tab="personal">Personal de Servicio</div>
+            <div class="tab" data-tab="resumen">Resumen</div>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="tab-content active" id="informacion">
+            <h2 class="section-title text-xl font-bold mb-4">Información General</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Vendedor/Planner</label>
+                    <input type="text" id="vendedor" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de los Novios</label>
+                    <input type="text" id="novios" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha del Evento</label>
+                    <input type="date" id="fecha" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Número de Invitados</label>
+                    <input type="number" id="invitados" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Lugar</label>
+                    <select id="tipo-lugar" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="nuestro">Nuestras Instalaciones</option>
+                        <option value="cliente">Instalaciones del Cliente</option>
+                    </select>
+                </div>
+                <div id="nuestros-lugares-container">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Seleccione Lugar</label>
+                    <select id="lugar-nuestro" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="jardin-botanico" data-precio="40000">Jardín Botánico - RD$40,000</option>
+                        <option value="espacio-mar" data-precio="100000">Espacio del Mar - RD$100,000</option>
+                        <option value="oceanna" data-precio="130000">Oceanna - RD$130,000</option>
+                        <option value="casa-playa" data-precio="25000">Casa en la Playa - RD$25,000</option>
+                        <option value="apartahotel" data-precio="65000">Apartahotel - RD$65,000</option>
+                        <option value="marina-guerra" data-precio="70000">Marina de Guerra - RD$70,000</option>
+                    </select>
+                </div>
+                <div id="cliente-lugar-container" style="display: none;">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Distancia desde Santo Domingo (km)</label>
+                    <input type="number" id="distancia-km" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="bienvenida">
+            <h2 class="section-title text-xl font-bold mb-4">Área de Bienvenida</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Stand para Fotos (RD$1,500 c/u)</label>
+                    <input type="number" id="stand-fotos" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mesa de Bienvenida</label>
+                    <select id="mesa-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">Ninguna</option>
+                        <option value="2500">Juego de 2 - RD$2,500</option>
+                        <option value="4000">Juego de 3 - RD$4,000</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Centros de Mesa Bienvenida (RD$3,000 c/u)</label>
+                    <input type="number" id="centros-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Candelabros (RD$200 c/u)</label>
+                    <input type="number" id="candelabros" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Trípode para Fotos (RD$800 c/u)</label>
+                    <input type="number" id="tripode" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cuadro de Bienvenida Personalizado (RD$4,500)</label>
+                    <select id="cuadro-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="4500">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Decoración Adicional (RD$)</label>
+                    <input type="number" id="decoracion-adicional-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="ceremonia">
+            <h2 class="section-title text-xl font-bold mb-4">Área de Ceremonia</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pórtico de Entrada Tipo Puertas (RD$4,000)</label>
+                    <select id="portico" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="4000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Arreglos en Ánforas Grandes (RD$5,000 c/u)</label>
+                    <input type="number" id="anforas" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Pasarela</label>
+                    <select id="pasarela" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">Ninguna</option>
+                        <option value="20000">Normal Madera Blanca - RD$20,000</option>
+                        <option value="60000">En Espejo - RD$60,000</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Arreglos de Flores para Pasillo (RD$20,000)</label>
+                    <select id="arreglos-pasillo" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="20000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tarima Redonda para Arco (RD$4,000)</label>
+                    <select id="tarima" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="4000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Arco</label>
+                    <select id="arco" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">Ninguno</option>
+                        <option value="25000">Arco de Flores Redondo Cerrado - RD$25,000</option>
+                        <option value="30000">Arco de Flores Abierto - RD$30,000</option>
+                        <option value="personalizado">Arco de Flores Personalizado</option>
+                    </select>
+                </div>
+                <div id="arco-personalizado-container" style="display: none;">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Precio Arco Personalizado (RD$)</label>
+                    <input type="number" id="arco-personalizado" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="recepcion">
+            <h2 class="section-title text-xl font-bold mb-4">Área de Recepción</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Centros de Mesa (RD$6,000 c/u)</label>
+                    <input type="number" id="centros-mesa" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Mesas</label>
+                    <select id="tipo-mesas" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="redondas">Mesas Redondas (10 personas, RD$250 c/u)</option>
+                        <option value="rectangulares">Mesas Rectangulares (8 personas, RD$250 c/u)</option>
+                        <option value="madera">Mesas de Madera (12 personas, RD$4,500 c/u)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Personas por Mesa</label>
+                    <input type="number" id="personas-mesa" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="1" max="12" value="10">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Servilletas (RD$50 c/u)</label>
+                    <select id="servilletas" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Platos Base (RD$45 c/u)</label>
+                    <select id="platos" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cubertería (RD$60 c/u)</label>
+                    <select id="cuberteria" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cristalería (RD$120 c/u)</label>
+                    <select id="cristaleria" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Sillas Tiffany (RD$115 c/u)</label>
+                    <select id="sillas" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="servicios">
+            <h2 class="section-title text-xl font-bold mb-4">Servicios Técnicos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Iluminación (RD$)</label>
+                    <input type="number" id="iluminacion" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Sonido (RD$)</label>
+                    <input type="number" id="sonido" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Máquina de Humo (RD$2,800)</label>
+                    <select id="maquina-humo" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="2800">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Máquina de Confetti (RD$5,000)</label>
+                    <select id="maquina-confetti" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="5000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Fuego Frío</label>
+                    <select id="fuego-frio" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">Ninguno</option>
+                        <option value="6000">2 Cañones - RD$6,000</option>
+                        <option value="11000">4 Cañones - RD$11,000</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Sonido para Orquesta (RD$30,000)</label>
+                    <select id="sonido-orquesta" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="30000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Otros Servicios Especiales (RD$)</label>
+                    <input type="number" id="otros-servicios" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="bizcocho">
+            <h2 class="section-title text-xl font-bold mb-4">Área de Bizcocho</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mesa para Bizcocho (RD$3,000)</label>
+                    <select id="mesa-bizcocho" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="3000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mampara Madera (RD$5,000)</label>
+                    <select id="mampara" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="5000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pared de Azaar (RD$12,500)</label>
+                    <select id="pared-azaar" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="12500">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Otra Decoración (RD$)</label>
+                    <input type="number" id="otra-decoracion-bizcocho" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bases para Postres (RD$150 c/u)</label>
+                    <input type="number" id="bases-postres" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Centros de Mesa para Área de Bizcocho (RD$3,000 c/u)</label>
+                    <input type="number" id="centros-bizcocho" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Camuflaje (RD$6,000)</label>
+                    <select id="camuflaje" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="6000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bizcocho Real (RD$150 por persona)</label>
+                    <select id="bizcocho-real" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="personal">
+            <h2 class="section-title text-xl font-bold mb-4">Personal de Servicio</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">DJ (RD$10,000)</label>
+                    <select id="dj" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="0">No</option>
+                        <option value="10000">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Camareros (1 por cada 25-30 personas, RD$3,000 c/u)</label>
+                    <select id="camareros-auto" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="auto">Calcular Automáticamente</option>
+                        <option value="manual">Especificar Manualmente</option>
+                    </select>
+                </div>
+                <div id="camareros-manual-container" style="display: none;">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Número de Camareros</label>
+                    <input type="number" id="camareros-manual" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Anfitriones/Host (1 por cada 40 personas, RD$2,000 c/u)</label>
+                    <select id="anfitriones-auto" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="auto">Calcular Automáticamente</option>
+                        <option value="manual">Especificar Manualmente</option>
+                    </select>
+                </div>
+                <div id="anfitriones-manual-container" style="display: none;">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Número de Anfitriones</label>
+                    <input type="number" id="anfitriones-manual" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Wedding Planner (30% del valor total)</label>
+                    <select id="wedding-planner" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Catering</label>
+                    <select id="tipo-catering" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="nuestro">Nuestro (RD$850 por persona)</option>
+                        <option value="personalizado">Personalizado</option>
+                    </select>
+                </div>
+                <div id="catering-personalizado-container" style="display: none;">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto Catering Personalizado (RD$)</label>
+                    <input type="number" id="catering-personalizado" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto de Transporte (RD$)</label>
+                    <input type="number" id="transporte" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto de Imprevistos (5% recomendado)</label>
+                    <input type="number" id="imprevistos-porcentaje" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" max="100" value="5">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="resumen">
+            <h2 class="section-title text-xl font-bold mb-4">Resumen del Presupuesto</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Información General</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p><strong>Vendedor/Planner:</strong> <span id="resumen-vendedor"></span></p>
+                            <p><strong>Novios:</strong> <span id="resumen-novios"></span></p>
+                            <p><strong>Fecha:</strong> <span id="resumen-fecha"></span></p>
+                        </div>
+                        <div>
+                            <p><strong>Invitados:</strong> <span id="resumen-invitados"></span></p>
+                            <p><strong>Lugar:</strong> <span id="resumen-lugar"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Desglose por Áreas</h3>
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Área</th>
+                                <th>Subtotal (RD$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Lugar</td>
+                                <td id="resumen-costo-lugar">0</td>
+                            </tr>
+                            <tr>
+                                <td>Área de Bienvenida</td>
+                                <td id="resumen-bienvenida">0</td>
+                            </tr>
+                            <tr>
+                                <td>Área de Ceremonia</td>
+                                <td id="resumen-ceremonia">0</td>
+                            </tr>
+                            <tr>
+                                <td>Área de Recepción</td>
+                                <td id="resumen-recepcion">0</td>
+                            </tr>
+                            <tr>
+                                <td>Servicios Técnicos</td>
+                                <td id="resumen-servicios">0</td>
+                            </tr>
+                            <tr>
+                                <td>Área de Bizcocho</td>
+                                <td id="resumen-bizcocho">0</td>
+                            </tr>
+                            <tr>
+                                <td>Personal de Servicio</td>
+                                <td id="resumen-personal">0</td>
+                            </tr>
+                            <tr>
+                                <td>Catering</td>
+                                <td id="resumen-catering">0</td>
+                            </tr>
+                            <tr>
+                                <td>Transporte</td>
+                                <td id="resumen-transporte">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Totales</h3>
+                    <table class="summary-table">
+                        <tbody>
+                            <tr>
+                                <td>Subtotal</td>
+                                <td id="resumen-subtotal">0</td>
+                            </tr>
+                            <tr>
+                                <td>Imprevistos (<span id="resumen-imprevistos-porcentaje">5</span>%)</td>
+                                <td id="resumen-imprevistos">0</td>
+                            </tr>
+                            <tr>
+                                <td>Comisión Vendedor/Planner (2%)</td>
+                                <td id="resumen-comision-vendedor">0</td>
+                            </tr>
+                            <tr>
+                                <td>Comisión Empresa (15%)</td>
+                                <td id="resumen-comision-empresa">0</td>
+                            </tr>
+                            <tr class="font-bold">
+                                <td>TOTAL</td>
+                                <td id="resumen-total">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button id="guardar-btn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all">
+                        Guardar en Navegador
+                    </button>
+                    <button id="pdf-btn" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded transition-all">
+                        Descargar PDF
+                    </button>
+                    <button id="nuevo-btn" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-all">
+                        Nuevo Presupuesto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Usuarios de demostración (en una aplicación real, esto estaría en un servidor)
+    const users = [
+        { username: "admin", password: "admin123", name: "Administrador" },
+        { username: "vendedor1", password: "vend123", name: "Juan Pérez" },
+        { username: "vendedor2", password: "vend456", name: "María Rodríguez" }
+    ];
+
+    // Variables globales
+    let currentUser = null;
+    let presupuestos = [];
+
+    // Elementos DOM
+    const loginSection = document.getElementById('login-section');
+    const presupuestoSection = document.getElementById('presupuesto-section');
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userDisplay = document.getElementById('user-display');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const guardarBtn = document.getElementById('guardar-btn');
+    const pdfBtn = document.getElementById('pdf-btn');
+    const nuevoBtn = document.getElementById('nuevo-btn');
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        // Cargar presupuestos guardados
+        const savedPresupuestos = localStorage.getItem('presupuestos');
+        if (savedPresupuestos) {
+            presupuestos = JSON.parse(savedPresupuestos);
+        }
+
+        // Event listeners
+        loginBtn.addEventListener('click', handleLogin);
+        logoutBtn.addEventListener('click', handleLogout);
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+        });
+
+        // Event listeners para campos que afectan cálculos
+        document.getElementById('tipo-lugar').addEventListener('change', toggleLugarOptions);
+        document.getElementById('arco').addEventListener('change', toggleArcoPersonalizado);
+        document.getElementById('camareros-auto').addEventListener('change', toggleCamarerosManual);
+        document.getElementById('anfitriones-auto').addEventListener('change', toggleAnfitrionesManual);
+        document.getElementById('tipo-catering').addEventListener('change', toggleCateringPersonalizado);
+        document.getElementById('invitados').addEventListener('input', updateCalculations);
+        document.getElementById('tipo-mesas').addEventListener('change', updateMesasInfo);
+        document.getElementById('personas-mesa').addEventListener('input', updateMesasInfo);
+
+        // Botones de acción
+        guardarBtn.addEventListener('click', guardarPresupuesto);
+        pdfBtn.addEventListener('click', generarPDF);
+        nuevoBtn.addEventListener('click', nuevoPresupuesto);
+
+        // Añadir event listeners a todos los inputs para actualizar cálculos
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('change', updateCalculations);
+            if (input.type === 'number') {
+                input.addEventListener('input', updateCalculations);
+            }
+        });
+
+        // Inicializar valores
+        toggleLugarOptions();
+        updateMesasInfo();
+    });
+
+    // Funciones de autenticación
+    function handleLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        const user = users.find(u => u.username === username && u.password === password);
+        
+        if (user) {
+            currentUser = user;
+            userDisplay.textContent = user.name;
+            loginSection.style.display = 'none';
+            presupuestoSection.style.display = 'block';
+            document.getElementById('vendedor').value = user.name;
+            updateCalculations();
+        } else {
+            alert('Usuario o contraseña incorrectos');
+        }
+    }
+
+    function handleLogout() {
+        currentUser = null;
+        loginSection.style.display = 'flex';
+        presupuestoSection.style.display = 'none';
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    }
+
+    // Funciones de UI
+    function switchTab(tabId) {
+        tabs.forEach(tab => {
+            if (tab.dataset.tab === tabId) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        
+        tabContents.forEach(content => {
+            if (content.id === tabId) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+    }
+
+    function toggleLugarOptions() {
+        const tipoLugar = document.getElementById('tipo-lugar').value;
+        const nuestrosLugaresContainer = document.getElementById('nuestros-lugares-container');
+        const clienteLugarContainer = document.getElementById('cliente-lugar-container');
+        
+        if (tipoLugar === 'nuestro') {
+            nuestrosLugaresContainer.style.display = 'block';
+            clienteLugarContainer.style.display = 'none';
+        } else {
+            nuestrosLugaresContainer.style.display = 'none';
+            clienteLugarContainer.style.display = 'block';
+        }
+        
+        updateCalculations();
+    }
+
+    function toggleArcoPersonalizado() {
+        const arcoValue = document.getElementById('arco').value;
+        const arcoPersonalizadoContainer = document.getElementById('arco-personalizado-container');
+        
+        if (arcoValue === 'personalizado') {
+            arcoPersonalizadoContainer.style.display = 'block';
+        } else {
+            arcoPersonalizadoContainer.style.display = 'none';
+        }
+    }
+
+    function toggleCamarerosManual() {
+        const camarerosAuto = document.getElementById('camareros-auto').value;
+        const camarerosManualContainer = document.getElementById('camareros-manual-container');
+        
+        if (camarerosAuto === 'manual') {
+            camarerosManualContainer.style.display = 'block';
+        } else {
+            camarerosManualContainer.style.display = 'none';
+        }
+        
+        updateCalculations();
+    }
+
+    function toggleAnfitrionesManual() {
+        const anfitrionesAuto = document.getElementById('anfitriones-auto').value;
+        const anfitrionesManualContainer = document.getElementById('anfitriones-manual-container');
+        
+        if (anfitrionesAuto === 'manual') {
+            anfitrionesManualContainer.style.display = 'block';
+        } else {
+            anfitrionesManualContainer.style.display = 'none';
+        }
+        
+        updateCalculations();
+    }
+
+    function toggleCateringPersonalizado() {
+        const tipoCatering = document.getElementById('tipo-catering').value;
+        const cateringPersonalizadoContainer = document.getElementById('catering-personalizado-container');
+        
+        if (tipoCatering === 'personalizado') {
+            cateringPersonalizadoContainer.style.display = 'block';
+        } else {
+            cateringPersonalizadoContainer.style.display = 'none';
+        }
+        
+        updateCalculations();
+    }
+
+    function updateMesasInfo() {
+        const tipoMesas = document.getElementById('tipo-mesas').value;
+        const personasMesaInput = document.getElementById('personas-mesa');
+        
+        if (tipoMesas === 'redondas') {
+            personasMesaInput.max = 10;
+            personasMesaInput.value = Math.min(parseInt(personasMesaInput.value) || 10, 10);
+        } else if (tipoMesas === 'rectangulares') {
+            personasMesaInput.max = 8;
+            personasMesaInput.value = Math.min(parseInt(personasMesaInput.value) || 8, 8);
+        } else if (tipoMesas === 'madera') {
+            personasMesaInput.max = 12;
+            personasMesaInput.value = Math.min(parseInt(personasMesaInput.value) || 12, 12);
+        }
+        
+        updateCalculations();
+    }
+
+    // Funciones de cálculo
+    function updateCalculations() {
+        const invitados = parseInt(document.getElementById('invitados').value) || 0;
+        
+        // Calcular costo del lugar
+        let costoLugar = 0;
+        const tipoLugar = document.getElementById('tipo-lugar').value;
+        
+        if (tipoLugar === 'nuestro') {
+            const lugarSelect = document.getElementById('lugar-nuestro');
+            const selectedOption = lugarSelect.options[lugarSelect.selectedIndex];
+            costoLugar = parseInt(selectedOption.dataset.precio) || 0;
+        } else {
+            const distanciaKm = parseInt(document.getElementById('distancia-km').value) || 0;
+            costoLugar = Math.ceil(distanciaKm / 25) * 20000;
+        }
+        
+        // Área de Bienvenida
+        const standFotos = (parseInt(document.getElementById('stand-fotos').value) || 0) * 1500;
+        const mesaBienvenida = parseInt(document.getElementById('mesa-bienvenida').value) || 0;
+        const centrosBienvenida = (parseInt(document.getElementById('centros-bienvenida').value) || 0) * 3000;
+        const candelabros = (parseInt(document.getElementById('candelabros').value) || 0) * 200;
+        const tripode = (parseInt(document.getElementById('tripode').value) || 0) * 800;
+        const cuadroBienvenida = parseInt(document.getElementById('cuadro-bienvenida').value) || 0;
+        const decoracionAdicionalBienvenida = parseInt(document.getElementById('decoracion-adicional-bienvenida').value) || 0;
+        
+        const totalBienvenida = standFotos + mesaBienvenida + centrosBienvenida + candelabros + tripode + cuadroBienvenida + decoracionAdicionalBienvenida;
+        
+        // Área de Ceremonia
+        const portico = parseInt(document.getElementById('portico').value) || 0;
+        const anforas = (parseInt(document.getElementById('anforas').value) || 0) * 5000;
+        const pasarela = parseInt(document.getElementById('pasarela').value) || 0;
+        const arreglosPasillo = parseInt(document.getElementById('arreglos-pasillo').value) || 0;
+        const tarima = parseInt(document.getElementById('tarima').value) || 0;
+        
+        let arcoValue = parseInt(document.getElementById('arco').value) || 0;
+        if (document.getElementById('arco').value === 'personalizado') {
+            arcoValue = parseInt(document.getElementById('arco-personalizado').value) || 0;
+        }
+        
+        const totalCeremonia = portico + anforas + pasarela + arreglosPasillo + tarima + arcoValue;
+        
+        // Área de Recepción
+        const centrosMesa = (parseInt(document.getElementById('centros-mesa').value) || 0) * 6000;
+        const tipoMesas = document.getElementById('tipo-mesas').value;
+        const personasMesa = parseInt(document.getElementById('personas-mesa').value) || 10;
+        
+        let precioMesa = 0;
+        let capacidadMesa = 10;
+        
+        if (tipoMesas === 'redondas') {
+            precioMesa = 250;
+            capacidadMesa = personasMesa;
+        } else if (tipoMesas === 'rectangulares') {
+            precioMesa = 250;
+            capacidadMesa = personasMesa;
+        } else if (tipoMesas === 'madera') {
+            precioMesa = 4500;
+            capacidadMesa = personasMesa;
+        }
+        
+        const numeroMesas = Math.ceil(invitados / capacidadMesa);
+        const costoMesas = numeroMesas * precioMesa;
+        
+        const servilletas = document.getElementById('servilletas').value === 'si' ? invitados * 50 : 0;
+        const platos = document.getElementById('platos').value === 'si' ? invitados * 45 : 0;
+        const cuberteria = document.getElementById('cuberteria').value === 'si' ? invitados * 60 : 0;
+        const cristaleria = document.getElementById('cristaleria').value === 'si' ? invitados * 120 : 0;
+        const sillas = document.getElementById('sillas').value === 'si' ? invitados * 115 * 2 : 0; // x2 para ceremonia y recepción
+        
+        const totalRecepcion = centrosMesa + costoMesas + servilletas + platos + cuberteria + cristaleria + sillas;
+        
+        // Servicios Técnicos
+        const iluminacion = parseInt(document.getElementById('iluminacion').value) || 0;
+        const sonido = parseInt(document.getElementById('sonido').value) || 0;
+        const maquinaHumo = parseInt(document.getElementById('maquina-humo').value) || 0;
+        const maquinaConfetti = parseInt(document.getElementById('maquina-confetti').value) || 0;
+        const fuegoFrio = parseInt(document.getElementById('fuego-frio').value) || 0;
+        const sonidoOrquesta = parseInt(document.getElementById('sonido-orquesta').value) || 0;
+        const otrosServicios = parseInt(document.getElementById('otros-servicios').value) || 0;
+        
+        const totalServicios = iluminacion + sonido + maquinaHumo + maquinaConfetti + fuegoFrio + sonidoOrquesta + otrosServicios;
+        
+        // Área de Bizcocho
+        const mesaBizcocho = parseInt(document.getElementById('mesa-bizcocho').value) || 0;
+        const mampara = parseInt(document.getElementById('mampara').value) || 0;
+        const paredAzaar = parseInt(document.getElementById('pared-azaar').value) || 0;
+        const otraDecoracionBizcocho = parseInt(document.getElementById('otra-decoracion-bizcocho').value) || 0;
+        const basesPostres = (parseInt(document.getElementById('bases-postres').value) || 0) * 150;
+        const centrosBizcocho = (parseInt(document.getElementById('centros-bizcocho').value) || 0) * 3000;
+        const camuflaje = parseInt(document.getElementById('camuflaje').value) || 0;
+        const bizchoReal = document.getElementById('bizcocho-real').value === 'si' ? invitados * 150 : 0;
+        
+        const totalBizcocho = mesaBizcocho + mampara + paredAzaar + otraDecoracionBizcocho + basesPostres + centrosBizcocho + camuflaje + bizchoReal;
+        
+        // Personal de Servicio
+        const dj = parseInt(document.getElementById('dj').value) || 0;
+        
+        let numeroCamareros = 0;
+        if (document.getElementById('camareros-auto').value === 'auto') {
+            numeroCamareros = Math.ceil(invitados / 25);
+        } else {
+            numeroCamareros = parseInt(document.getElementById('camareros-manual').value) || 0;
+        }
+        const costoCamareros = numeroCamareros * 3000;
+        
+        let numeroAnfitriones = 0;
+        if (document.getElementById('anfitriones-auto').value === 'auto') {
+            numeroAnfitriones = Math.ceil(invitados / 40);
+        } else {
+            numeroAnfitriones = parseInt(document.getElementById('anfitriones-manual').value) || 0;
+        }
+        const costoAnfitriones = numeroAnfitriones * 2000;
+        
+        // Catering
+        let costoCatering = 0;
+        if (document.getElementById('tipo-catering').value === 'nuestro') {
+            costoCatering = invitados * 850;
+        } else {
+            costoCatering = parseInt(document.getElementById('catering-personalizado').value) || 0;
+        }
+        
+        const transporte = parseInt(document.getElementById('transporte').value) || 0;
+        
+        const totalPersonal = dj + costoCamareros + costoAnfitriones;
+        
+        // Subtotal
+        const subtotal = costoLugar + totalBienvenida + totalCeremonia + totalRecepcion + totalServicios + totalBizcocho + totalPersonal + costoCatering + transporte;
+        
+        // Imprevistos
+        const imprevistosPorc = parseInt(document.getElementById('imprevistos-porcentaje').value) || 5;
+        const imprevistos = subtotal * (imprevistosPorc / 100);
+        
+        // Comisiones
+        const comisionVendedor = subtotal * 0.02;
+        const comisionEmpresa = subtotal * 0.15;
+        
+        // Wedding Planner (30% del total si está seleccionado)
+        let costoWeddingPlanner = 0;
+        if (document.getElementById('wedding-planner').value === 'si') {
+            costoWeddingPlanner = subtotal * 0.3;
+        }
+        
+        // Total
+        const total = subtotal + imprevistos + comisionVendedor + comisionEmpresa + costoWeddingPlanner;
+        
+        // Actualizar resumen
+        document.getElementById('resumen-vendedor').textContent = document.getElementById('vendedor').value || 'No especificado';
+        document.getElementById('resumen-novios').textContent = document.getElementById('novios').value || 'No especificado';
+        document.getElementById('resumen-fecha').textContent = document.getElementById('fecha').value || 'No especificada';
+        document.getElementById('resumen-invitados').textContent = invitados;
+        
+        let lugarText = '';
+        if (tipoLugar === 'nuestro') {
+            const lugarSelect = document.getElementById('lugar-nuestro');
+            lugarText = lugarSelect.options[lugarSelect.selectedIndex].text;
+        } else {
+            lugarText = 'Instalaciones del Cliente';
+        }
+        document.getElementById('resumen-lugar').textContent = lugarText;
+        
+        document.getElementById('resumen-costo-lugar').textContent = formatCurrency(costoLugar);
+        document.getElementById('resumen-bienvenida').textContent = formatCurrency(totalBienvenida);
+        document.getElementById('resumen-ceremonia').textContent = formatCurrency(totalCeremonia);
+        document.getElementById('resumen-recepcion').textContent = formatCurrency(totalRecepcion);
+        document.getElementById('resumen-servicios').textContent = formatCurrency(totalServicios);
+        document.getElementById('resumen-bizcocho').textContent = formatCurrency(totalBizcocho);
+        document.getElementById('resumen-personal').textContent = formatCurrency(totalPersonal);
+        document.getElementById('resumen-catering').textContent = formatCurrency(costoCatering);
+        document.getElementById('resumen-transporte').textContent = formatCurrency(transporte);
+        
+        document.getElementById('resumen-subtotal').textContent = formatCurrency(subtotal);
+        document.getElementById('resumen-imprevistos-porcentaje').textContent = imprevistosPorc;
+        document.getElementById('resumen-imprevistos').textContent = formatCurrency(imprevistos);
+        document.getElementById('resumen-comision-vendedor').textContent = formatCurrency(comisionVendedor);
+        document.getElementById('resumen-comision-empresa').textContent = formatCurrency(comisionEmpresa);
+        document.getElementById('resumen-total').textContent = formatCurrency(total);
+    }
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('es-DO', { style: 'currency', currency: 'DOP' }).format(amount);
+    }
+
+    // Funciones de acción
+    function guardarPresupuesto() {
+        if (!currentUser) return;
+        
+        const presupuesto = {
+            id: Date.now(),
+            fecha: new Date().toISOString(),
+            vendedor: document.getElementById('vendedor').value,
+            novios: document.getElementById('novios').value,
+            fechaEvento: document.getElementById('fecha').value,
+            invitados: document.getElementById('invitados').value,
+            total: document.getElementById('resumen-total').textContent,
+            usuario: currentUser.username
+        };
+        
+        presupuestos.push(presupuesto);
+        localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
+        
+        alert('Presupuesto guardado correctamente');
+    }
+
+    function generarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Título
+        doc.setFontSize(20);
+        doc.text('Presupuesto de Boda', 105, 20, { align: 'center' });
+        
+        // Información general
+        doc.setFontSize(12);
+        doc.text('Información General', 20, 30);
+        doc.setFontSize(10);
+        doc.text(`Vendedor/Planner: ${document.getElementById('resumen-vendedor').textContent}`, 20, 40);
+        doc.text(`Novios: ${document.getElementById('resumen-novios').textContent}`, 20, 45);
+        doc.text(`Fecha: ${document.getElementById('resumen-fecha').textContent}`, 20, 50);
+        doc.text(`Invitados: ${document.getElementById('resumen-invitados').textContent}`, 20, 55);
+        doc.text(`Lugar: ${document.getElementById('resumen-lugar').textContent}`, 20, 60);
+        
+        // Desglose
+        doc.setFontSize(12);
+        doc.text('Desglose por Áreas', 20, 70);
+        doc.setFontSize(10);
+        doc.text('Área', 20, 80);
+        doc.text('Subtotal (RD$)', 100, 80);
+        
+        let y = 85;
+        doc.text('Lugar', 20, y);
+        doc.text(document.getElementById('resumen-costo-lugar').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Área de Bienvenida', 20, y);
+        doc.text(document.getElementById('resumen-bienvenida').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Área de Ceremonia', 20, y);
+        doc.text(document.getElementById('resumen-ceremonia').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Área de Recepción', 20, y);
+        doc.text(document.getElementById('resumen-recepcion').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Servicios Técnicos', 20, y);
+        doc.text(document.getElementById('resumen-servicios').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Área de Bizcocho', 20, y);
+        doc.text(document.getElementById('resumen-bizcocho').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Personal de Servicio', 20, y);
+        doc.text(document.getElementById('resumen-personal').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Catering', 20, y);
+        doc.text(document.getElementById('resumen-catering').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Transporte', 20, y);
+        doc.text(document.getElementById('resumen-transporte').textContent, 100, y);
+        y += 10;
+        
+        // Totales
+        doc.setFontSize(12);
+        doc.text('Totales', 20, y);
+        y += 10;
+        doc.setFontSize(10);
+        
+        doc.text('Subtotal', 20, y);
+        doc.text(document.getElementById('resumen-subtotal').textContent, 100, y);
+        y += 5;
+        
+        doc.text(`Imprevistos (${document.getElementById('resumen-imprevistos-porcentaje').textContent}%)`, 20, y);
+        doc.text(document.getElementById('resumen-imprevistos').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Comisión Vendedor/Planner (2%)', 20, y);
+        doc.text(document.getElementById('resumen-comision-vendedor').textContent, 100, y);
+        y += 5;
+        
+        doc.text('Comisión Empresa (15%)', 20, y);
+        doc.text(document.getElementById('resumen-comision-empresa').textContent, 100, y);
+        y += 5;
+        
+        doc.setFontSize(12);
+        doc.text('TOTAL', 20, y);
+        doc.text(document.getElementById('resumen-total').textContent, 100, y);
+        y += 15;
+        
+        // Pie de página
+        doc.setFontSize(8);
+        doc.text(`Generado por: ${currentUser ? currentUser.name : 'Usuario'} - Fecha: ${new Date().toLocaleDateString()}`, 105, 280, { align: 'center' });
+        
+        // Guardar PDF
+        doc.save(`Presupuesto_${document.getElementById('novios').value || 'Boda'}.pdf`);
+    }
+
+    function nuevoPresupuesto() {
+        if (confirm('¿Está seguro de crear un nuevo presupuesto? Se perderán los datos no guardados.')) {
+            // Resetear todos los campos
+            document.querySelectorAll('input[type="text"], input[type="date"], input[type="number"]').forEach(input => {
+                input.value = '';
+            });
+            
+            document.querySelectorAll('select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+            
+            // Mantener el nombre del vendedor
+            document.getElementById('vendedor').value = currentUser ? currentUser.name : '';
+            
+            // Valores por defecto
+            document.getElementById('invitados').value = '0';
+            document.getElementById('imprevistos-porcentaje').value = '5';
+            
+            // Actualizar cálculos
+            toggleLugarOptions();
+            updateMesasInfo();
+            updateCalculations();
+            
+            // Volver a la primera pestaña
+            switchTab('informacion');
+        }
+    }
+</script>
