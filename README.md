@@ -1,1024 +1,890 @@
-# calculadora-presupuesto1
-calculadora de presupuesto para boda
 ```html
-<!-- Main Calculator Section -->
-<div id="presupuesto-section" class="presupuesto-container min-h-screen bg-gray-50">
-    <header class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-6 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-gray-800">Calculadora de Presupuestos</h1>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f9f7f7;
+    }
+    
+    h1, h2, h3 {
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .login-bg {
+        background: linear-gradient(135deg, #f8bbd0 0%, #e1bee7 100%);
+    }
+    
+    .app-bg {
+        background-color: #f9f7f7;
+    }
+    
+    .category-card {
+        transition: all 0.3s ease;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .budget-item {
+        transition: background-color 0.2s ease;
+    }
+    
+    .budget-item:hover {
+        background-color: #f0e6ff;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(103, 58, 183, 0.4);
+    }
+    
+    .btn-secondary {
+        background: linear-gradient(135deg, #f48fb1 0%, #ce93d8 100%);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(244, 143, 177, 0.4);
+    }
+    
+    .input-field {
+        transition: all 0.3s ease;
+        border: 2px solid #e0e0e0;
+    }
+    
+    .input-field:focus {
+        border-color: #9c27b0;
+        box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
+    }
+    
+    /* Animaciones */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeIn {
+        animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    
+    /* Estilos para el PDF */
+    .pdf-header {
+        text-align: center;
+        color: #9c27b0;
+        margin-bottom: 20px;
+    }
+    
+    .pdf-section {
+        margin-bottom: 15px;
+    }
+    
+    .pdf-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .pdf-table th, .pdf-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    
+    .pdf-table th {
+        background-color: #f2f2f2;
+    }
+    
+    .pdf-footer {
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 30px;
+    }
+</style>
+        <div class="mb-6 animate-fadeIn delay-100">
+            <label for="username" class="block text-gray-700 font-medium mb-2">Usuario</label>
+            <input type="text" id="username" class="input-field w-full px-4 py-2 rounded-lg focus:outline-none" placeholder="Ingresa tu usuario">
+        </div>
+        
+        <div class="mb-8 animate-fadeIn delay-200">
+            <label for="password" class="block text-gray-700 font-medium mb-2">Contraseña</label>
+            <input type="password" id="password" class="input-field w-full px-4 py-2 rounded-lg focus:outline-none" placeholder="Ingresa tu contraseña">
+            <p id="login-error" class="text-red-500 mt-2 text-sm hidden">Usuario o contraseña incorrectos</p>
+        </div>
+        
+        <button id="login-btn" class="btn-primary w-full py-3 text-white font-medium rounded-lg animate-fadeIn delay-300">
+            Iniciar Sesión
+        </button>
+        
+        <div class="text-center mt-6 text-sm text-gray-600 animate-fadeIn delay-300">
+            <p>Usuario de demostración: admin</p>
+            <p>Contraseña: admin123</p>
+        </div>
+    </div>
+</div>
+
+<!-- Aplicación Principal -->
+<div id="app" class="hidden app-bg min-h-screen">
+    <!-- Barra de navegación -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
-                <span id="user-display" class="mr-4 text-gray-600"></span>
-                <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded transition-all">
-                    Cerrar Sesión
+                <h1 class="text-2xl font-bold text-purple-800">Calculadora de Presupuesto</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="user-display" class="text-gray-700 font-medium"></span>
+                <button id="logout-btn" class="text-purple-600 hover:text-purple-800 font-medium">Cerrar Sesión</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Resumen del presupuesto -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-wrap justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Resumen del Presupuesto</h2>
+                    <p class="text-gray-600 mt-1">Gestiona y controla tus gastos para la boda</p>
+                </div>
+                <div class="mt-4 sm:mt-0">
+                    <button id="new-budget-btn" class="btn-primary px-6 py-2 text-white font-medium rounded-lg mr-2">
+                        Nuevo Presupuesto
+                    </button>
+                    <button id="save-budget-btn" class="btn-secondary px-6 py-2 text-white font-medium rounded-lg">
+                        Guardar Presupuesto
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-500">
+                    <h3 class="text-lg font-semibold text-purple-800">Presupuesto Total</h3>
+                    <div class="flex items-end mt-2">
+                        <span id="total-budget" class="text-3xl font-bold text-purple-900">$0</span>
+                        <input type="number" id="budget-input" class="input-field ml-3 px-3 py-1 w-32 rounded-lg text-gray-700" placeholder="Definir">
+                    </div>
+                </div>
+                
+                <div class="bg-pink-50 rounded-lg p-4 border-l-4 border-pink-500">
+                    <h3 class="text-lg font-semibold text-pink-800">Gastos Actuales</h3>
+                    <p id="current-expenses" class="text-3xl font-bold text-pink-900 mt-2">$0</p>
+                </div>
+                
+                <div class="bg-green-50 rounded-lg p-4 border-l-4 border-green-500">
+                    <h3 class="text-lg font-semibold text-green-800">Saldo Restante</h3>
+                    <p id="remaining-budget" class="text-3xl font-bold text-green-900 mt-2">$0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorías de gastos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="category-card bg-white rounded-lg shadow-md p-6 cursor-pointer" data-category="venue">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Lugar y Catering</h3>
+                    <span class="category-amount text-lg font-semibold text-purple-700">$0</span>
+                </div>
+                <p class="text-gray-600 mt-2">Salón, comida, bebidas, pastel</p>
+            </div>
+            
+            <div class="category-card bg-white rounded-lg shadow-md p-6 cursor-pointer" data-category="attire">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Vestimenta</h3>
+                    <span class="category-amount text-lg font-semibold text-purple-700">$0</span>
+                </div>
+                <p class="text-gray-600 mt-2">Vestido, traje, accesorios</p>
+            </div>
+            
+            <div class="category-card bg-white rounded-lg shadow-md p-6 cursor-pointer" data-category="photography">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Fotografía y Video</h3>
+                    <span class="category-amount text-lg font-semibold text-purple-700">$0</span>
+                </div>
+                <p class="text-gray-600 mt-2">Fotógrafo, videógrafo, álbum</p>
+            </div>
+            
+            <div class="category-card bg-white rounded-lg shadow-md p-6 cursor-pointer" data-category="decoration">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Decoración</h3>
+                    <span class="category-amount text-lg font-semibold text-purple-700">$0</span>
+                </div>
+                <p class="text-gray-600 mt-2">Flores, centros de mesa, iluminación</p>
+            </div>
+            
+            <div class="category-card bg-white rounded-lg shadow-md p-6 cursor-pointer" data-category="music">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Música y Entretenimiento</h3>
+                    <span class="category-amount text-lg font-semibold text-purple-700">$0</span>
+                </div>
+                <p class="text-gray-600 mt-2">DJ, banda, animación</p>
+            </div>
+            
+            <div class="category-card bg-white rounded-lg shadow-md p-6 cursor-pointer" data-category="others">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Otros Gastos</h3>
+                    <span class="category-amount text-lg font-semibold text-purple-700">$0</span>
+                </div>
+                <p class="text-gray-600 mt-2">Invitaciones, transporte, regalos</p>
+            </div>
+        </div>
+
+        <!-- Lista de presupuestos guardados -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Presupuestos Guardados</h2>
+            <div id="saved-budgets-list" class="space-y-3">
+                <!-- Los presupuestos guardados se mostrarán aquí -->
+                <p id="no-budgets-message" class="text-gray-500 italic">No hay presupuestos guardados</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalles de categoría -->
+    <div id="category-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="modal-title" class="text-2xl font-bold text-purple-800">Detalles de Categoría</h2>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
+            </div>
+            
+            <div id="category-items" class="space-y-4 mb-6">
+                <!-- Los items de la categoría se mostrarán aquí -->
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4">
+                <div class="flex items-center mb-4">
+                    <input type="text" id="new-item-name" class="input-field flex-grow px-4 py-2 rounded-lg mr-2" placeholder="Nombre del item">
+                    <input type="number" id="new-item-amount" class="input-field w-32 px-4 py-2 rounded-lg" placeholder="Monto">
+                </div>
+                <button id="add-item-btn" class="btn-primary px-6 py-2 text-white font-medium rounded-lg">
+                    Agregar Item
+                </button>
+            </div>
+            
+            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
+                <div>
+                    <p class="text-gray-700">Total de la categoría:</p>
+                    <p id="modal-category-total" class="text-2xl font-bold text-purple-900">$0</p>
+                </div>
+                <button id="save-category-btn" class="btn-secondary px-6 py-2 text-white font-medium rounded-lg">
+                    Guardar Cambios
                 </button>
             </div>
         </div>
-    </header>
+    </div>
 
-    <main class="container mx-auto px-4 py-8">
-        <!-- Tabs Navigation -->
-        <div class="flex mb-0">
-            <div class="tab active" data-tab="informacion">Información</div>
-            <div class="tab" data-tab="bienvenida">Área de Bienvenida</div>
-            <div class="tab" data-tab="ceremonia">Área de Ceremonia</div>
-            <div class="tab" data-tab="recepcion">Área de Recepción</div>
-            <div class="tab" data-tab="servicios">Servicios Técnicos</div>
-            <div class="tab" data-tab="bizcocho">Área de Bizcocho</div>
-            <div class="tab" data-tab="personal">Personal de Servicio</div>
-            <div class="tab" data-tab="resumen">Resumen</div>
-        </div>
-
-        <!-- Tab Contents -->
-        <div class="tab-content active" id="informacion">
-            <h2 class="section-title text-xl font-bold mb-4">Información General</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Vendedor/Planner</label>
-                    <input type="text" id="vendedor" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de los Novios</label>
-                    <input type="text" id="novios" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha del Evento</label>
-                    <input type="date" id="fecha" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Número de Invitados</label>
-                    <input type="number" id="invitados" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Lugar</label>
-                    <select id="tipo-lugar" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="nuestro">Nuestras Instalaciones</option>
-                        <option value="cliente">Instalaciones del Cliente</option>
-                    </select>
-                </div>
-                <div id="nuestros-lugares-container">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Seleccione Lugar</label>
-                    <select id="lugar-nuestro" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="jardin-botanico" data-precio="40000">Jardín Botánico - RD$40,000</option>
-                        <option value="espacio-mar" data-precio="100000">Espacio del Mar - RD$100,000</option>
-                        <option value="oceanna" data-precio="130000">Oceanna - RD$130,000</option>
-                        <option value="casa-playa" data-precio="25000">Casa en la Playa - RD$25,000</option>
-                        <option value="apartahotel" data-precio="65000">Apartahotel - RD$65,000</option>
-                        <option value="marina-guerra" data-precio="70000">Marina de Guerra - RD$70,000</option>
-                    </select>
-                </div>
-                <div id="cliente-lugar-container" style="display: none;">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Distancia desde Santo Domingo (km)</label>
-                    <input type="number" id="distancia-km" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0">
-                </div>
+    <!-- Modal para guardar presupuesto -->
+    <div id="save-budget-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-purple-800">Guardar Presupuesto</h2>
+                <button id="close-save-modal-btn" class="text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
+            </div>
+            
+            <div class="mb-6">
+                <label for="budget-name" class="block text-gray-700 font-medium mb-2">Nombre del Presupuesto</label>
+                <input type="text" id="budget-name" class="input-field w-full px-4 py-2 rounded-lg" placeholder="Ej: Presupuesto Inicial">
+            </div>
+            
+            <div class="mb-6">
+                <label for="budget-description" class="block text-gray-700 font-medium mb-2">Descripción (opcional)</label>
+                <textarea id="budget-description" class="input-field w-full px-4 py-2 rounded-lg" rows="3" placeholder="Añade una descripción para este presupuesto"></textarea>
+            </div>
+            
+            <div class="flex justify-end">
+                <button id="confirm-save-budget-btn" class="btn-primary px-6 py-2 text-white font-medium rounded-lg">
+                    Guardar
+                </button>
             </div>
         </div>
+    </div>
 
-        <div class="tab-content" id="bienvenida">
-            <h2 class="section-title text-xl font-bold mb-4">Área de Bienvenida</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Stand para Fotos (RD$1,500 c/u)</label>
-                    <input type="number" id="stand-fotos" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Mesa de Bienvenida</label>
-                    <select id="mesa-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">Ninguna</option>
-                        <option value="2500">Juego de 2 - RD$2,500</option>
-                        <option value="4000">Juego de 3 - RD$4,000</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Centros de Mesa Bienvenida (RD$3,000 c/u)</label>
-                    <input type="number" id="centros-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Candelabros (RD$200 c/u)</label>
-                    <input type="number" id="candelabros" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Trípode para Fotos (RD$800 c/u)</label>
-                    <input type="number" id="tripode" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Cuadro de Bienvenida Personalizado (RD$4,500)</label>
-                    <select id="cuadro-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="4500">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Decoración Adicional (RD$)</label>
-                    <input type="number" id="decoracion-adicional-bienvenida" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
+    <!-- Modal para ver detalles del presupuesto guardado -->
+    <div id="view-budget-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="view-budget-title" class="text-2xl font-bold text-purple-800">Detalles del Presupuesto</h2>
+                <button id="close-view-modal-btn" class="text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
             </div>
-        </div>
-
-        <div class="tab-content" id="ceremonia">
-            <h2 class="section-title text-xl font-bold mb-4">Área de Ceremonia</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pórtico de Entrada Tipo Puertas (RD$4,000)</label>
-                    <select id="portico" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="4000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Arreglos en Ánforas Grandes (RD$5,000 c/u)</label>
-                    <input type="number" id="anforas" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Pasarela</label>
-                    <select id="pasarela" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">Ninguna</option>
-                        <option value="20000">Normal Madera Blanca - RD$20,000</option>
-                        <option value="60000">En Espejo - RD$60,000</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Arreglos de Flores para Pasillo (RD$20,000)</label>
-                    <select id="arreglos-pasillo" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="20000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tarima Redonda para Arco (RD$4,000)</label>
-                    <select id="tarima" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="4000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Arco</label>
-                    <select id="arco" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">Ninguno</option>
-                        <option value="25000">Arco de Flores Redondo Cerrado - RD$25,000</option>
-                        <option value="30000">Arco de Flores Abierto - RD$30,000</option>
-                        <option value="personalizado">Arco de Flores Personalizado</option>
-                    </select>
-                </div>
-                <div id="arco-personalizado-container" style="display: none;">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Precio Arco Personalizado (RD$)</label>
-                    <input type="number" id="arco-personalizado" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
+            
+            <div id="view-budget-content" class="space-y-6">
+                <!-- El contenido del presupuesto se mostrará aquí -->
             </div>
-        </div>
-
-        <div class="tab-content" id="recepcion">
-            <h2 class="section-title text-xl font-bold mb-4">Área de Recepción</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Centros de Mesa (RD$6,000 c/u)</label>
-                    <input type="number" id="centros-mesa" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Mesas</label>
-                    <select id="tipo-mesas" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="redondas">Mesas Redondas (10 personas, RD$250 c/u)</option>
-                        <option value="rectangulares">Mesas Rectangulares (8 personas, RD$250 c/u)</option>
-                        <option value="madera">Mesas de Madera (12 personas, RD$4,500 c/u)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Personas por Mesa</label>
-                    <input type="number" id="personas-mesa" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="1" max="12" value="10">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Servilletas (RD$50 c/u)</label>
-                    <select id="servilletas" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Platos Base (RD$45 c/u)</label>
-                    <select id="platos" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Cubertería (RD$60 c/u)</label>
-                    <select id="cuberteria" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Cristalería (RD$120 c/u)</label>
-                    <select id="cristaleria" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sillas Tiffany (RD$115 c/u)</label>
-                    <select id="sillas" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="servicios">
-            <h2 class="section-title text-xl font-bold mb-4">Servicios Técnicos</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Iluminación (RD$)</label>
-                    <input type="number" id="iluminacion" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sonido (RD$)</label>
-                    <input type="number" id="sonido" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Máquina de Humo (RD$2,800)</label>
-                    <select id="maquina-humo" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="2800">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Máquina de Confetti (RD$5,000)</label>
-                    <select id="maquina-confetti" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="5000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Fuego Frío</label>
-                    <select id="fuego-frio" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">Ninguno</option>
-                        <option value="6000">2 Cañones - RD$6,000</option>
-                        <option value="11000">4 Cañones - RD$11,000</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sonido para Orquesta (RD$30,000)</label>
-                    <select id="sonido-orquesta" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="30000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Otros Servicios Especiales (RD$)</label>
-                    <input type="number" id="otros-servicios" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="bizcocho">
-            <h2 class="section-title text-xl font-bold mb-4">Área de Bizcocho</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Mesa para Bizcocho (RD$3,000)</label>
-                    <select id="mesa-bizcocho" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="3000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Mampara Madera (RD$5,000)</label>
-                    <select id="mampara" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="5000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pared de Azaar (RD$12,500)</label>
-                    <select id="pared-azaar" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="12500">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Otra Decoración (RD$)</label>
-                    <input type="number" id="otra-decoracion-bizcocho" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Bases para Postres (RD$150 c/u)</label>
-                    <input type="number" id="bases-postres" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Centros de Mesa para Área de Bizcocho (RD$3,000 c/u)</label>
-                    <input type="number" id="centros-bizcocho" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Camuflaje (RD$6,000)</label>
-                    <select id="camuflaje" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="6000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Bizcocho Real (RD$150 por persona)</label>
-                    <select id="bizcocho-real" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="no">No</option>
-                        <option value="si">Sí</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="personal">
-            <h2 class="section-title text-xl font-bold mb-4">Personal de Servicio</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">DJ (RD$10,000)</label>
-                    <select id="dj" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="0">No</option>
-                        <option value="10000">Sí</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Camareros (1 por cada 25-30 personas, RD$3,000 c/u)</label>
-                    <select id="camareros-auto" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="auto">Calcular Automáticamente</option>
-                        <option value="manual">Especificar Manualmente</option>
-                    </select>
-                </div>
-                <div id="camareros-manual-container" style="display: none;">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Número de Camareros</label>
-                    <input type="number" id="camareros-manual" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Anfitriones/Host (1 por cada 40 personas, RD$2,000 c/u)</label>
-                    <select id="anfitriones-auto" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="auto">Calcular Automáticamente</option>
-                        <option value="manual">Especificar Manualmente</option>
-                    </select>
-                </div>
-                <div id="anfitriones-manual-container" style="display: none;">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Número de Anfitriones</label>
-                    <input type="number" id="anfitriones-manual" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Wedding Planner (30% del valor total)</label>
-                    <select id="wedding-planner" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Catering</label>
-                    <select id="tipo-catering" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="nuestro">Nuestro (RD$850 por persona)</option>
-                        <option value="personalizado">Personalizado</option>
-                    </select>
-                </div>
-                <div id="catering-personalizado-container" style="display: none;">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto Catering Personalizado (RD$)</label>
-                    <input type="number" id="catering-personalizado" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto de Transporte (RD$)</label>
-                    <input type="number" id="transporte" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" value="0">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto de Imprevistos (5% recomendado)</label>
-                    <input type="number" id="imprevistos-porcentaje" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" max="100" value="5">
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="resumen">
-            <h2 class="section-title text-xl font-bold mb-4">Resumen del Presupuesto</h2>
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-2">Información General</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <p><strong>Vendedor/Planner:</strong> <span id="resumen-vendedor"></span></p>
-                            <p><strong>Novios:</strong> <span id="resumen-novios"></span></p>
-                            <p><strong>Fecha:</strong> <span id="resumen-fecha"></span></p>
-                        </div>
-                        <div>
-                            <p><strong>Invitados:</strong> <span id="resumen-invitados"></span></p>
-                            <p><strong>Lugar:</strong> <span id="resumen-lugar"></span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-2">Desglose por Áreas</h3>
-                    <table class="summary-table">
-                        <thead>
-                            <tr>
-                                <th>Área</th>
-                                <th>Subtotal (RD$)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Lugar</td>
-                                <td id="resumen-costo-lugar">0</td>
-                            </tr>
-                            <tr>
-                                <td>Área de Bienvenida</td>
-                                <td id="resumen-bienvenida">0</td>
-                            </tr>
-                            <tr>
-                                <td>Área de Ceremonia</td>
-                                <td id="resumen-ceremonia">0</td>
-                            </tr>
-                            <tr>
-                                <td>Área de Recepción</td>
-                                <td id="resumen-recepcion">0</td>
-                            </tr>
-                            <tr>
-                                <td>Servicios Técnicos</td>
-                                <td id="resumen-servicios">0</td>
-                            </tr>
-                            <tr>
-                                <td>Área de Bizcocho</td>
-                                <td id="resumen-bizcocho">0</td>
-                            </tr>
-                            <tr>
-                                <td>Personal de Servicio</td>
-                                <td id="resumen-personal">0</td>
-                            </tr>
-                            <tr>
-                                <td>Catering</td>
-                                <td id="resumen-catering">0</td>
-                            </tr>
-                            <tr>
-                                <td>Transporte</td>
-                                <td id="resumen-transporte">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-2">Totales</h3>
-                    <table class="summary-table">
-                        <tbody>
-                            <tr>
-                                <td>Subtotal</td>
-                                <td id="resumen-subtotal">0</td>
-                            </tr>
-                            <tr>
-                                <td>Imprevistos (<span id="resumen-imprevistos-porcentaje">5</span>%)</td>
-                                <td id="resumen-imprevistos">0</td>
-                            </tr>
-                            <tr>
-                                <td>Comisión Vendedor/Planner (2%)</td>
-                                <td id="resumen-comision-vendedor">0</td>
-                            </tr>
-                            <tr>
-                                <td>Comisión Empresa (15%)</td>
-                                <td id="resumen-comision-empresa">0</td>
-                            </tr>
-                            <tr class="font-bold">
-                                <td>TOTAL</td>
-                                <td id="resumen-total">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="flex justify-end space-x-4">
-                    <button id="guardar-btn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all">
-                        Guardar en Navegador
+            
+            <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-200">
+                <button id="delete-budget-btn" class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg">
+                    Eliminar
+                </button>
+                <div class="flex space-x-3">
+                    <button id="load-budget-btn" class="btn-secondary px-6 py-2 text-white font-medium rounded-lg">
+                        Cargar Presupuesto
                     </button>
-                    <button id="pdf-btn" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded transition-all">
-                        Descargar PDF
-                    </button>
-                    <button id="nuevo-btn" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-all">
-                        Nuevo Presupuesto
+                    <button id="export-pdf-btn" class="btn-primary px-6 py-2 text-white font-medium rounded-lg">
+                        Exportar PDF
                     </button>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 </div>
 
 <script>
-    // Usuarios de demostración (en una aplicación real, esto estaría en un servidor)
-    const users = [
-        { username: "admin", password: "admin123", name: "Administrador" },
-        { username: "vendedor1", password: "vend123", name: "Juan Pérez" },
-        { username: "vendedor2", password: "vend456", name: "María Rodríguez" }
-    ];
-
-    // Variables globales
-    let currentUser = null;
-    let presupuestos = [];
-
-    // Elementos DOM
-    const loginSection = document.getElementById('login-section');
-    const presupuestoSection = document.getElementById('presupuesto-section');
-    const loginBtn = document.getElementById('login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const userDisplay = document.getElementById('user-display');
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    const guardarBtn = document.getElementById('guardar-btn');
-    const pdfBtn = document.getElementById('pdf-btn');
-    const nuevoBtn = document.getElementById('nuevo-btn');
-
-    // Inicialización
-    document.addEventListener('DOMContentLoaded', () => {
-        // Cargar presupuestos guardados
-        const savedPresupuestos = localStorage.getItem('presupuestos');
-        if (savedPresupuestos) {
-            presupuestos = JSON.parse(savedPresupuestos);
-        }
-
-        // Event listeners
-        loginBtn.addEventListener('click', handleLogin);
-        logoutBtn.addEventListener('click', handleLogout);
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => switchTab(tab.dataset.tab));
-        });
-
-        // Event listeners para campos que afectan cálculos
-        document.getElementById('tipo-lugar').addEventListener('change', toggleLugarOptions);
-        document.getElementById('arco').addEventListener('change', toggleArcoPersonalizado);
-        document.getElementById('camareros-auto').addEventListener('change', toggleCamarerosManual);
-        document.getElementById('anfitriones-auto').addEventListener('change', toggleAnfitrionesManual);
-        document.getElementById('tipo-catering').addEventListener('change', toggleCateringPersonalizado);
-        document.getElementById('invitados').addEventListener('input', updateCalculations);
-        document.getElementById('tipo-mesas').addEventListener('change', updateMesasInfo);
-        document.getElementById('personas-mesa').addEventListener('input', updateMesasInfo);
-
-        // Botones de acción
-        guardarBtn.addEventListener('click', guardarPresupuesto);
-        pdfBtn.addEventListener('click', generarPDF);
-        nuevoBtn.addEventListener('click', nuevoPresupuesto);
-
-        // Añadir event listeners a todos los inputs para actualizar cálculos
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('change', updateCalculations);
-            if (input.type === 'number') {
-                input.addEventListener('input', updateCalculations);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variables globales
+        let currentBudget = {
+            total: 0,
+            categories: {
+                venue: { name: 'Lugar y Catering', items: [] },
+                attire: { name: 'Vestimenta', items: [] },
+                photography: { name: 'Fotografía y Video', items: [] },
+                decoration: { name: 'Decoración', items: [] },
+                music: { name: 'Música y Entretenimiento', items: [] },
+                others: { name: 'Otros Gastos', items: [] }
             }
-        });
-
-        // Inicializar valores
-        toggleLugarOptions();
-        updateMesasInfo();
-    });
-
-    // Funciones de autenticación
-    function handleLogin() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        const user = users.find(u => u.username === username && u.password === password);
-        
-        if (user) {
-            currentUser = user;
-            userDisplay.textContent = user.name;
-            loginSection.style.display = 'none';
-            presupuestoSection.style.display = 'block';
-            document.getElementById('vendedor').value = user.name;
-            updateCalculations();
-        } else {
-            alert('Usuario o contraseña incorrectos');
-        }
-    }
-
-    function handleLogout() {
-        currentUser = null;
-        loginSection.style.display = 'flex';
-        presupuestoSection.style.display = 'none';
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-    }
-
-    // Funciones de UI
-    function switchTab(tabId) {
-        tabs.forEach(tab => {
-            if (tab.dataset.tab === tabId) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
-            }
-        });
-        
-        tabContents.forEach(content => {
-            if (content.id === tabId) {
-                content.classList.add('active');
-            } else {
-                content.classList.remove('active');
-            }
-        });
-    }
-
-    function toggleLugarOptions() {
-        const tipoLugar = document.getElementById('tipo-lugar').value;
-        const nuestrosLugaresContainer = document.getElementById('nuestros-lugares-container');
-        const clienteLugarContainer = document.getElementById('cliente-lugar-container');
-        
-        if (tipoLugar === 'nuestro') {
-            nuestrosLugaresContainer.style.display = 'block';
-            clienteLugarContainer.style.display = 'none';
-        } else {
-            nuestrosLugaresContainer.style.display = 'none';
-            clienteLugarContainer.style.display = 'block';
-        }
-        
-        updateCalculations();
-    }
-
-    function toggleArcoPersonalizado() {
-        const arcoValue = document.getElementById('arco').value;
-        const arcoPersonalizadoContainer = document.getElementById('arco-personalizado-container');
-        
-        if (arcoValue === 'personalizado') {
-            arcoPersonalizadoContainer.style.display = 'block';
-        } else {
-            arcoPersonalizadoContainer.style.display = 'none';
-        }
-    }
-
-    function toggleCamarerosManual() {
-        const camarerosAuto = document.getElementById('camareros-auto').value;
-        const camarerosManualContainer = document.getElementById('camareros-manual-container');
-        
-        if (camarerosAuto === 'manual') {
-            camarerosManualContainer.style.display = 'block';
-        } else {
-            camarerosManualContainer.style.display = 'none';
-        }
-        
-        updateCalculations();
-    }
-
-    function toggleAnfitrionesManual() {
-        const anfitrionesAuto = document.getElementById('anfitriones-auto').value;
-        const anfitrionesManualContainer = document.getElementById('anfitriones-manual-container');
-        
-        if (anfitrionesAuto === 'manual') {
-            anfitrionesManualContainer.style.display = 'block';
-        } else {
-            anfitrionesManualContainer.style.display = 'none';
-        }
-        
-        updateCalculations();
-    }
-
-    function toggleCateringPersonalizado() {
-        const tipoCatering = document.getElementById('tipo-catering').value;
-        const cateringPersonalizadoContainer = document.getElementById('catering-personalizado-container');
-        
-        if (tipoCatering === 'personalizado') {
-            cateringPersonalizadoContainer.style.display = 'block';
-        } else {
-            cateringPersonalizadoContainer.style.display = 'none';
-        }
-        
-        updateCalculations();
-    }
-
-    function updateMesasInfo() {
-        const tipoMesas = document.getElementById('tipo-mesas').value;
-        const personasMesaInput = document.getElementById('personas-mesa');
-        
-        if (tipoMesas === 'redondas') {
-            personasMesaInput.max = 10;
-            personasMesaInput.value = Math.min(parseInt(personasMesaInput.value) || 10, 10);
-        } else if (tipoMesas === 'rectangulares') {
-            personasMesaInput.max = 8;
-            personasMesaInput.value = Math.min(parseInt(personasMesaInput.value) || 8, 8);
-        } else if (tipoMesas === 'madera') {
-            personasMesaInput.max = 12;
-            personasMesaInput.value = Math.min(parseInt(personasMesaInput.value) || 12, 12);
-        }
-        
-        updateCalculations();
-    }
-
-    // Funciones de cálculo
-    function updateCalculations() {
-        const invitados = parseInt(document.getElementById('invitados').value) || 0;
-        
-        // Calcular costo del lugar
-        let costoLugar = 0;
-        const tipoLugar = document.getElementById('tipo-lugar').value;
-        
-        if (tipoLugar === 'nuestro') {
-            const lugarSelect = document.getElementById('lugar-nuestro');
-            const selectedOption = lugarSelect.options[lugarSelect.selectedIndex];
-            costoLugar = parseInt(selectedOption.dataset.precio) || 0;
-        } else {
-            const distanciaKm = parseInt(document.getElementById('distancia-km').value) || 0;
-            costoLugar = Math.ceil(distanciaKm / 25) * 20000;
-        }
-        
-        // Área de Bienvenida
-        const standFotos = (parseInt(document.getElementById('stand-fotos').value) || 0) * 1500;
-        const mesaBienvenida = parseInt(document.getElementById('mesa-bienvenida').value) || 0;
-        const centrosBienvenida = (parseInt(document.getElementById('centros-bienvenida').value) || 0) * 3000;
-        const candelabros = (parseInt(document.getElementById('candelabros').value) || 0) * 200;
-        const tripode = (parseInt(document.getElementById('tripode').value) || 0) * 800;
-        const cuadroBienvenida = parseInt(document.getElementById('cuadro-bienvenida').value) || 0;
-        const decoracionAdicionalBienvenida = parseInt(document.getElementById('decoracion-adicional-bienvenida').value) || 0;
-        
-        const totalBienvenida = standFotos + mesaBienvenida + centrosBienvenida + candelabros + tripode + cuadroBienvenida + decoracionAdicionalBienvenida;
-        
-        // Área de Ceremonia
-        const portico = parseInt(document.getElementById('portico').value) || 0;
-        const anforas = (parseInt(document.getElementById('anforas').value) || 0) * 5000;
-        const pasarela = parseInt(document.getElementById('pasarela').value) || 0;
-        const arreglosPasillo = parseInt(document.getElementById('arreglos-pasillo').value) || 0;
-        const tarima = parseInt(document.getElementById('tarima').value) || 0;
-        
-        let arcoValue = parseInt(document.getElementById('arco').value) || 0;
-        if (document.getElementById('arco').value === 'personalizado') {
-            arcoValue = parseInt(document.getElementById('arco-personalizado').value) || 0;
-        }
-        
-        const totalCeremonia = portico + anforas + pasarela + arreglosPasillo + tarima + arcoValue;
-        
-        // Área de Recepción
-        const centrosMesa = (parseInt(document.getElementById('centros-mesa').value) || 0) * 6000;
-        const tipoMesas = document.getElementById('tipo-mesas').value;
-        const personasMesa = parseInt(document.getElementById('personas-mesa').value) || 10;
-        
-        let precioMesa = 0;
-        let capacidadMesa = 10;
-        
-        if (tipoMesas === 'redondas') {
-            precioMesa = 250;
-            capacidadMesa = personasMesa;
-        } else if (tipoMesas === 'rectangulares') {
-            precioMesa = 250;
-            capacidadMesa = personasMesa;
-        } else if (tipoMesas === 'madera') {
-            precioMesa = 4500;
-            capacidadMesa = personasMesa;
-        }
-        
-        const numeroMesas = Math.ceil(invitados / capacidadMesa);
-        const costoMesas = numeroMesas * precioMesa;
-        
-        const servilletas = document.getElementById('servilletas').value === 'si' ? invitados * 50 : 0;
-        const platos = document.getElementById('platos').value === 'si' ? invitados * 45 : 0;
-        const cuberteria = document.getElementById('cuberteria').value === 'si' ? invitados * 60 : 0;
-        const cristaleria = document.getElementById('cristaleria').value === 'si' ? invitados * 120 : 0;
-        const sillas = document.getElementById('sillas').value === 'si' ? invitados * 115 * 2 : 0; // x2 para ceremonia y recepción
-        
-        const totalRecepcion = centrosMesa + costoMesas + servilletas + platos + cuberteria + cristaleria + sillas;
-        
-        // Servicios Técnicos
-        const iluminacion = parseInt(document.getElementById('iluminacion').value) || 0;
-        const sonido = parseInt(document.getElementById('sonido').value) || 0;
-        const maquinaHumo = parseInt(document.getElementById('maquina-humo').value) || 0;
-        const maquinaConfetti = parseInt(document.getElementById('maquina-confetti').value) || 0;
-        const fuegoFrio = parseInt(document.getElementById('fuego-frio').value) || 0;
-        const sonidoOrquesta = parseInt(document.getElementById('sonido-orquesta').value) || 0;
-        const otrosServicios = parseInt(document.getElementById('otros-servicios').value) || 0;
-        
-        const totalServicios = iluminacion + sonido + maquinaHumo + maquinaConfetti + fuegoFrio + sonidoOrquesta + otrosServicios;
-        
-        // Área de Bizcocho
-        const mesaBizcocho = parseInt(document.getElementById('mesa-bizcocho').value) || 0;
-        const mampara = parseInt(document.getElementById('mampara').value) || 0;
-        const paredAzaar = parseInt(document.getElementById('pared-azaar').value) || 0;
-        const otraDecoracionBizcocho = parseInt(document.getElementById('otra-decoracion-bizcocho').value) || 0;
-        const basesPostres = (parseInt(document.getElementById('bases-postres').value) || 0) * 150;
-        const centrosBizcocho = (parseInt(document.getElementById('centros-bizcocho').value) || 0) * 3000;
-        const camuflaje = parseInt(document.getElementById('camuflaje').value) || 0;
-        const bizchoReal = document.getElementById('bizcocho-real').value === 'si' ? invitados * 150 : 0;
-        
-        const totalBizcocho = mesaBizcocho + mampara + paredAzaar + otraDecoracionBizcocho + basesPostres + centrosBizcocho + camuflaje + bizchoReal;
-        
-        // Personal de Servicio
-        const dj = parseInt(document.getElementById('dj').value) || 0;
-        
-        let numeroCamareros = 0;
-        if (document.getElementById('camareros-auto').value === 'auto') {
-            numeroCamareros = Math.ceil(invitados / 25);
-        } else {
-            numeroCamareros = parseInt(document.getElementById('camareros-manual').value) || 0;
-        }
-        const costoCamareros = numeroCamareros * 3000;
-        
-        let numeroAnfitriones = 0;
-        if (document.getElementById('anfitriones-auto').value === 'auto') {
-            numeroAnfitriones = Math.ceil(invitados / 40);
-        } else {
-            numeroAnfitriones = parseInt(document.getElementById('anfitriones-manual').value) || 0;
-        }
-        const costoAnfitriones = numeroAnfitriones * 2000;
-        
-        // Catering
-        let costoCatering = 0;
-        if (document.getElementById('tipo-catering').value === 'nuestro') {
-            costoCatering = invitados * 850;
-        } else {
-            costoCatering = parseInt(document.getElementById('catering-personalizado').value) || 0;
-        }
-        
-        const transporte = parseInt(document.getElementById('transporte').value) || 0;
-        
-        const totalPersonal = dj + costoCamareros + costoAnfitriones;
-        
-        // Subtotal
-        const subtotal = costoLugar + totalBienvenida + totalCeremonia + totalRecepcion + totalServicios + totalBizcocho + totalPersonal + costoCatering + transporte;
-        
-        // Imprevistos
-        const imprevistosPorc = parseInt(document.getElementById('imprevistos-porcentaje').value) || 5;
-        const imprevistos = subtotal * (imprevistosPorc / 100);
-        
-        // Comisiones
-        const comisionVendedor = subtotal * 0.02;
-        const comisionEmpresa = subtotal * 0.15;
-        
-        // Wedding Planner (30% del total si está seleccionado)
-        let costoWeddingPlanner = 0;
-        if (document.getElementById('wedding-planner').value === 'si') {
-            costoWeddingPlanner = subtotal * 0.3;
-        }
-        
-        // Total
-        const total = subtotal + imprevistos + comisionVendedor + comisionEmpresa + costoWeddingPlanner;
-        
-        // Actualizar resumen
-        document.getElementById('resumen-vendedor').textContent = document.getElementById('vendedor').value || 'No especificado';
-        document.getElementById('resumen-novios').textContent = document.getElementById('novios').value || 'No especificado';
-        document.getElementById('resumen-fecha').textContent = document.getElementById('fecha').value || 'No especificada';
-        document.getElementById('resumen-invitados').textContent = invitados;
-        
-        let lugarText = '';
-        if (tipoLugar === 'nuestro') {
-            const lugarSelect = document.getElementById('lugar-nuestro');
-            lugarText = lugarSelect.options[lugarSelect.selectedIndex].text;
-        } else {
-            lugarText = 'Instalaciones del Cliente';
-        }
-        document.getElementById('resumen-lugar').textContent = lugarText;
-        
-        document.getElementById('resumen-costo-lugar').textContent = formatCurrency(costoLugar);
-        document.getElementById('resumen-bienvenida').textContent = formatCurrency(totalBienvenida);
-        document.getElementById('resumen-ceremonia').textContent = formatCurrency(totalCeremonia);
-        document.getElementById('resumen-recepcion').textContent = formatCurrency(totalRecepcion);
-        document.getElementById('resumen-servicios').textContent = formatCurrency(totalServicios);
-        document.getElementById('resumen-bizcocho').textContent = formatCurrency(totalBizcocho);
-        document.getElementById('resumen-personal').textContent = formatCurrency(totalPersonal);
-        document.getElementById('resumen-catering').textContent = formatCurrency(costoCatering);
-        document.getElementById('resumen-transporte').textContent = formatCurrency(transporte);
-        
-        document.getElementById('resumen-subtotal').textContent = formatCurrency(subtotal);
-        document.getElementById('resumen-imprevistos-porcentaje').textContent = imprevistosPorc;
-        document.getElementById('resumen-imprevistos').textContent = formatCurrency(imprevistos);
-        document.getElementById('resumen-comision-vendedor').textContent = formatCurrency(comisionVendedor);
-        document.getElementById('resumen-comision-empresa').textContent = formatCurrency(comisionEmpresa);
-        document.getElementById('resumen-total').textContent = formatCurrency(total);
-    }
-
-    function formatCurrency(amount) {
-        return new Intl.NumberFormat('es-DO', { style: 'currency', currency: 'DOP' }).format(amount);
-    }
-
-    // Funciones de acción
-    function guardarPresupuesto() {
-        if (!currentUser) return;
-        
-        const presupuesto = {
-            id: Date.now(),
-            fecha: new Date().toISOString(),
-            vendedor: document.getElementById('vendedor').value,
-            novios: document.getElementById('novios').value,
-            fechaEvento: document.getElementById('fecha').value,
-            invitados: document.getElementById('invitados').value,
-            total: document.getElementById('resumen-total').textContent,
-            usuario: currentUser.username
         };
         
-        presupuestos.push(presupuesto);
-        localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
+        let currentCategory = '';
+        let savedBudgets = JSON.parse(localStorage.getItem('weddingBudgets')) || [];
+        let currentBudgetIndex = -1;
         
-        alert('Presupuesto guardado correctamente');
-    }
-
-    function generarPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+        // Elementos DOM
+        const loginScreen = document.getElementById('login-screen');
+        const app = document.getElementById('app');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userDisplay = document.getElementById('user-display');
+        const loginError = document.getElementById('login-error');
         
-        // Título
-        doc.setFontSize(20);
-        doc.text('Presupuesto de Boda', 105, 20, { align: 'center' });
+        const totalBudgetDisplay = document.getElementById('total-budget');
+        const budgetInput = document.getElementById('budget-input');
+        const currentExpensesDisplay = document.getElementById('current-expenses');
+        const remainingBudgetDisplay = document.getElementById('remaining-budget');
         
-        // Información general
-        doc.setFontSize(12);
-        doc.text('Información General', 20, 30);
-        doc.setFontSize(10);
-        doc.text(`Vendedor/Planner: ${document.getElementById('resumen-vendedor').textContent}`, 20, 40);
-        doc.text(`Novios: ${document.getElementById('resumen-novios').textContent}`, 20, 45);
-        doc.text(`Fecha: ${document.getElementById('resumen-fecha').textContent}`, 20, 50);
-        doc.text(`Invitados: ${document.getElementById('resumen-invitados').textContent}`, 20, 55);
-        doc.text(`Lugar: ${document.getElementById('resumen-lugar').textContent}`, 20, 60);
+        const categoryCards = document.querySelectorAll('.category-card');
+        const categoryModal = document.getElementById('category-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const categoryItems = document.getElementById('category-items');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const newItemName = document.getElementById('new-item-name');
+        const newItemAmount = document.getElementById('new-item-amount');
+        const addItemBtn = document.getElementById('add-item-btn');
+        const modalCategoryTotal = document.getElementById('modal-category-total');
+        const saveCategoryBtn = document.getElementById('save-category-btn');
         
-        // Desglose
-        doc.setFontSize(12);
-        doc.text('Desglose por Áreas', 20, 70);
-        doc.setFontSize(10);
-        doc.text('Área', 20, 80);
-        doc.text('Subtotal (RD$)', 100, 80);
+        const newBudgetBtn = document.getElementById('new-budget-btn');
+        const saveBudgetBtn = document.getElementById('save-budget-btn');
+        const saveBudgetModal = document.getElementById('save-budget-modal');
+        const closeSaveModalBtn = document.getElementById('close-save-modal-btn');
+        const budgetName = document.getElementById('budget-name');
+        const budgetDescription = document.getElementById('budget-description');
+        const confirmSaveBudgetBtn = document.getElementById('confirm-save-budget-btn');
         
-        let y = 85;
-        doc.text('Lugar', 20, y);
-        doc.text(document.getElementById('resumen-costo-lugar').textContent, 100, y);
-        y += 5;
+        const savedBudgetsList = document.getElementById('saved-budgets-list');
+        const noBudgetsMessage = document.getElementById('no-budgets-message');
         
-        doc.text('Área de Bienvenida', 20, y);
-        doc.text(document.getElementById('resumen-bienvenida').textContent, 100, y);
-        y += 5;
+        const viewBudgetModal = document.getElementById('view-budget-modal');
+        const viewBudgetTitle = document.getElementById('view-budget-title');
+        const viewBudgetContent = document.getElementById('view-budget-content');
+        const closeViewModalBtn = document.getElementById('close-view-modal-btn');
+        const deleteBudgetBtn = document.getElementById('delete-budget-btn');
+        const loadBudgetBtn = document.getElementById('load-budget-btn');
+        const exportPdfBtn = document.getElementById('export-pdf-btn');
         
-        doc.text('Área de Ceremonia', 20, y);
-        doc.text(document.getElementById('resumen-ceremonia').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Área de Recepción', 20, y);
-        doc.text(document.getElementById('resumen-recepcion').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Servicios Técnicos', 20, y);
-        doc.text(document.getElementById('resumen-servicios').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Área de Bizcocho', 20, y);
-        doc.text(document.getElementById('resumen-bizcocho').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Personal de Servicio', 20, y);
-        doc.text(document.getElementById('resumen-personal').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Catering', 20, y);
-        doc.text(document.getElementById('resumen-catering').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Transporte', 20, y);
-        doc.text(document.getElementById('resumen-transporte').textContent, 100, y);
-        y += 10;
-        
-        // Totales
-        doc.setFontSize(12);
-        doc.text('Totales', 20, y);
-        y += 10;
-        doc.setFontSize(10);
-        
-        doc.text('Subtotal', 20, y);
-        doc.text(document.getElementById('resumen-subtotal').textContent, 100, y);
-        y += 5;
-        
-        doc.text(`Imprevistos (${document.getElementById('resumen-imprevistos-porcentaje').textContent}%)`, 20, y);
-        doc.text(document.getElementById('resumen-imprevistos').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Comisión Vendedor/Planner (2%)', 20, y);
-        doc.text(document.getElementById('resumen-comision-vendedor').textContent, 100, y);
-        y += 5;
-        
-        doc.text('Comisión Empresa (15%)', 20, y);
-        doc.text(document.getElementById('resumen-comision-empresa').textContent, 100, y);
-        y += 5;
-        
-        doc.setFontSize(12);
-        doc.text('TOTAL', 20, y);
-        doc.text(document.getElementById('resumen-total').textContent, 100, y);
-        y += 15;
-        
-        // Pie de página
-        doc.setFontSize(8);
-        doc.text(`Generado por: ${currentUser ? currentUser.name : 'Usuario'} - Fecha: ${new Date().toLocaleDateString()}`, 105, 280, { align: 'center' });
-        
-        // Guardar PDF
-        doc.save(`Presupuesto_${document.getElementById('novios').value || 'Boda'}.pdf`);
-    }
-
-    function nuevoPresupuesto() {
-        if (confirm('¿Está seguro de crear un nuevo presupuesto? Se perderán los datos no guardados.')) {
-            // Resetear todos los campos
-            document.querySelectorAll('input[type="text"], input[type="date"], input[type="number"]').forEach(input => {
-                input.value = '';
-            });
+        // Funciones de autenticación
+        loginBtn.addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
-            document.querySelectorAll('select').forEach(select => {
-                select.selectedIndex = 0;
-            });
+            if (username === 'admin' && password === 'admin123') {
+                loginScreen.classList.add('hidden');
+                app.classList.remove('hidden');
+                userDisplay.textContent = `¡Hola, ${username}!`;
+                loginError.classList.add('hidden');
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+        
+        logoutBtn.addEventListener('click', function() {
+            app.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        });
+        
+        // Funciones de presupuesto
+        budgetInput.addEventListener('change', function() {
+            const budgetValue = parseFloat(budgetInput.value) || 0;
+            currentBudget.total = budgetValue;
+            updateBudgetDisplay();
+        });
+        
+        function updateBudgetDisplay() {
+            // Actualizar el presupuesto total
+            totalBudgetDisplay.textContent = formatCurrency(currentBudget.total);
             
-            // Mantener el nombre del vendedor
-            document.getElementById('vendedor').value = currentUser ? currentUser.name : '';
+            // Calcular y actualizar los gastos actuales
+            let totalExpenses = 0;
+            for (const category in currentBudget.categories) {
+                let categoryTotal = 0;
+                currentBudget.categories[category].items.forEach(item => {
+                    categoryTotal += item.amount;
+                });
+                totalExpenses += categoryTotal;
+                
+                // Actualizar el monto mostrado en la tarjeta de categoría
+                const categoryCard = document.querySelector(`.category-card[data-category="${category}"]`);
+                if (categoryCard) {
+                    const amountElement = categoryCard.querySelector('.category-amount');
+                    amountElement.textContent = formatCurrency(categoryTotal);
+                }
+            }
             
-            // Valores por defecto
-            document.getElementById('invitados').value = '0';
-            document.getElementById('imprevistos-porcentaje').value = '5';
+            currentExpensesDisplay.textContent = formatCurrency(totalExpenses);
             
-            // Actualizar cálculos
-            toggleLugarOptions();
-            updateMesasInfo();
-            updateCalculations();
+            // Calcular y actualizar el saldo restante
+            const remaining = currentBudget.total - totalExpenses;
+            remainingBudgetDisplay.textContent = formatCurrency(remaining);
             
-            // Volver a la primera pestaña
-            switchTab('informacion');
+            // Cambiar el color del saldo restante según su valor
+            if (remaining < 0) {
+                remainingBudgetDisplay.classList.remove('text-green-900');
+                remainingBudgetDisplay.classList.add('text-red-600');
+            } else {
+                remainingBudgetDisplay.classList.remove('text-red-600');
+                remainingBudgetDisplay.classList.add('text-green-900');
+            }
         }
-    }
+        
+        // Funciones de categorías
+        categoryCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                openCategoryModal(category);
+            });
+        });
+        
+        function openCategoryModal(category) {
+            currentCategory = category;
+            modalTitle.textContent = currentBudget.categories[category].name;
+            
+            // Limpiar y llenar los items de la categoría
+            categoryItems.innerHTML = '';
+            let categoryTotal = 0;
+            
+            currentBudget.categories[category].items.forEach((item, index) => {
+                categoryTotal += item.amount;
+                addItemToModal(item.name, item.amount, index);
+            });
+            
+            modalCategoryTotal.textContent = formatCurrency(categoryTotal);
+            categoryModal.classList.remove('hidden');
+            
+            // Limpiar los campos de nuevo item
+            newItemName.value = '';
+            newItemAmount.value = '';
+        }
+        
+        function addItemToModal(name, amount, index) {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'budget-item flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+            itemElement.innerHTML = `
+                <span class="font-medium text-gray-800">${name}</span>
+                <div class="flex items-center">
+                    <span class="font-semibold text-purple-700 mr-3">${formatCurrency(amount)}</span>
+                    <button class="delete-item-btn text-red-500 hover:text-red-700" data-index="${index}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            categoryItems.appendChild(itemElement);
+            
+            // Agregar evento para eliminar item
+            const deleteBtn = itemElement.querySelector('.delete-item-btn');
+            deleteBtn.addEventListener('click', function() {
+                const itemIndex = parseInt(this.getAttribute('data-index'));
+                deleteItem(itemIndex);
+            });
+        }
+        
+        function deleteItem(index) {
+            currentBudget.categories[currentCategory].items.splice(index, 1);
+            openCategoryModal(currentCategory); // Recargar el modal
+        }
+        
+        addItemBtn.addEventListener('click', function() {
+            const name = newItemName.value.trim();
+            const amount = parseFloat(newItemAmount.value) || 0;
+            
+            if (name && amount > 0) {
+                currentBudget.categories[currentCategory].items.push({ name, amount });
+                openCategoryModal(currentCategory); // Recargar el modal
+            }
+        });
+        
+        closeModalBtn.addEventListener('click', function() {
+            categoryModal.classList.add('hidden');
+        });
+        
+        saveCategoryBtn.addEventListener('click', function() {
+            categoryModal.classList.add('hidden');
+            updateBudgetDisplay();
+        });
+        
+        // Funciones para guardar y cargar presupuestos
+        newBudgetBtn.addEventListener('click', function() {
+            if (confirm('¿Estás seguro de crear un nuevo presupuesto? Se perderán los datos no guardados.')) {
+                currentBudget = {
+                    total: 0,
+                    categories: {
+                        venue: { name: 'Lugar y Catering', items: [] },
+                        attire: { name: 'Vestimenta', items: [] },
+                        photography: { name: 'Fotografía y Video', items: [] },
+                        decoration: { name: 'Decoración', items: [] },
+                        music: { name: 'Música y Entretenimiento', items: [] },
+                        others: { name: 'Otros Gastos', items: [] }
+                    }
+                };
+                budgetInput.value = '';
+                currentBudgetIndex = -1;
+                updateBudgetDisplay();
+            }
+        });
+        
+        saveBudgetBtn.addEventListener('click', function() {
+            budgetName.value = '';
+            budgetDescription.value = '';
+            saveBudgetModal.classList.remove('hidden');
+        });
+        
+        closeSaveModalBtn.addEventListener('click', function() {
+            saveBudgetModal.classList.add('hidden');
+        });
+        
+        confirmSaveBudgetBtn.addEventListener('click', function() {
+            const name = budgetName.value.trim();
+            const description = budgetDescription.value.trim();
+            const date = new Date().toLocaleDateString();
+            
+            if (name) {
+                const budgetToSave = {
+                    name,
+                    description,
+                    date,
+                    budget: JSON.parse(JSON.stringify(currentBudget)) // Copia profunda
+                };
+                
+                if (currentBudgetIndex >= 0) {
+                    // Actualizar presupuesto existente
+                    savedBudgets[currentBudgetIndex] = budgetToSave;
+                } else {
+                    // Guardar nuevo presupuesto
+                    savedBudgets.push(budgetToSave);
+                    currentBudgetIndex = savedBudgets.length - 1;
+                }
+                
+                localStorage.setItem('weddingBudgets', JSON.stringify(savedBudgets));
+                saveBudgetModal.classList.add('hidden');
+                updateSavedBudgetsList();
+            }
+        });
+        
+        function updateSavedBudgetsList() {
+            savedBudgetsList.innerHTML = '';
+            
+            if (savedBudgets.length === 0) {
+                noBudgetsMessage.classList.remove('hidden');
+            } else {
+                noBudgetsMessage.classList.add('hidden');
+                
+                savedBudgets.forEach((budget, index) => {
+                    // Calcular el total de gastos
+                    let totalExpenses = 0;
+                    for (const category in budget.budget.categories) {
+                        budget.budget.categories[category].items.forEach(item => {
+                            totalExpenses += item.amount;
+                        });
+                    }
+                    
+                    const budgetElement = document.createElement('div');
+                    budgetElement.className = 'budget-item flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer';
+                    budgetElement.innerHTML = `
+                        <div>
+                            <h3 class="font-semibold text-gray-800">${budget.name}</h3>
+                            <p class="text-sm text-gray-600">Creado: ${budget.date}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-purple-700">${formatCurrency(budget.budget.total)}</p>
+                            <p class="text-sm text-gray-600">Gastos: ${formatCurrency(totalExpenses)}</p>
+                        </div>
+                    `;
+                    
+                    budgetElement.addEventListener('click', function() {
+                        openBudgetDetails(index);
+                    });
+                    
+                    savedBudgetsList.appendChild(budgetElement);
+                });
+            }
+        }
+        
+        function openBudgetDetails(index) {
+            const budget = savedBudgets[index];
+            viewBudgetTitle.textContent = budget.name;
+            
+            // Limpiar y llenar el contenido
+            viewBudgetContent.innerHTML = '';
+            
+            // Información general
+            const infoSection = document.createElement('div');
+            infoSection.className = 'mb-6';
+            infoSection.innerHTML = `
+                <p class="text-gray-600"><strong>Fecha:</strong> ${budget.date}</p>
+                ${budget.description ? `<p class="text-gray-600 mt-2"><strong>Descripción:</strong> ${budget.description}</p>` : ''}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <p class="text-sm text-purple-800">Presupuesto Total</p>
+                        <p class="text-xl font-bold text-purple-900">${formatCurrency(budget.budget.total)}</p>
+                    </div>
+                    <div class="bg-pink-50 p-3 rounded-lg">
+                        <p class="text-sm text-pink-800">Gastos Totales</p>
+                        <p class="text-xl font-bold text-pink-900" id="view-total-expenses">Calculando...</p>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg">
+                        <p class="text-sm text-green-800">Saldo Restante</p>
+                        <p class="text-xl font-bold" id="view-remaining">Calculando...</p>
+                    </div>
+                </div>
+            `;
+            viewBudgetContent.appendChild(infoSection);
+            
+            // Detalles por categoría
+            let totalExpenses = 0;
+            
+            for (const categoryKey in budget.budget.categories) {
+                const category = budget.budget.categories[categoryKey];
+                let categoryTotal = 0;
+                
+                // Calcular el total de la categoría
+                category.items.forEach(item => {
+                    categoryTotal += item.amount;
+                });
+                
+                totalExpenses += categoryTotal;
+                
+                // Solo mostrar categorías con items
+                if (category.items.length > 0) {
+                    const categorySection = document.createElement('div');
+                    categorySection.className = 'mb-6';
+                    
+                    let itemsHTML = '';
+                    category.items.forEach(item => {
+                        itemsHTML += `
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <span>${item.name}</span>
+                                <span class="font-medium">${formatCurrency(item.amount)}</span>
+                            </div>
+                        `;
+                    });
+                    
+                    categorySection.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-lg font-semibold text-gray-800">${category.name}</h3>
+                            <span class="font-bold text-purple-700">${formatCurrency(categoryTotal)}</span>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            ${itemsHTML}
+                        </div>
+                    `;
+                    
+                    viewBudgetContent.appendChild(categorySection);
+                }
+            }
+            
+            // Actualizar los totales
+            const viewTotalExpenses = document.getElementById('view-total-expenses');
+            const viewRemaining = document.getElementById('view-remaining');
+            const remaining = budget.budget.total - totalExpenses;
+            
+            viewTotalExpenses.textContent = formatCurrency(totalExpenses);
+            viewRemaining.textContent = formatCurrency(remaining);
+            
+            if (remaining < 0) {
+                viewRemaining.classList.add('text-red-600');
+                viewRemaining.classList.remove('text-green-900');
+            } else {
+                viewRemaining.classList.add('text-green-900');
+                viewRemaining.classList.remove('text-red-600');
+            }
+            
+            // Configurar botones
+            deleteBudgetBtn.setAttribute('data-index', index);
+            loadBudgetBtn.setAttribute('data-index', index);
+            exportPdfBtn.setAttribute('data-index', index);
+            
+            viewBudgetModal.classList.remove('hidden');
+        }
+        
+        closeViewModalBtn.addEventListener('click', function() {
+            viewBudgetModal.classList.add('hidden');
+        });
+        
+        deleteBudgetBtn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            
+            if (confirm('¿Estás seguro de eliminar este presupuesto? Esta acción no se puede deshacer.')) {
+                savedBudgets.splice(index, 1);
+                localStorage.setItem('weddingBudgets', JSON.stringify(savedBudgets));
+                
+                if (currentBudgetIndex === index) {
+                    currentBudgetIndex = -1;
+                } else if (currentBudgetIndex > index) {
+                    currentBudgetIndex--;
+                }
+                
+                viewBudgetModal.classList.add('hidden');
+                updateSavedBudgetsList();
+            }
+        });
+        
+        loadBudgetBtn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            
+            if (confirm('¿Estás seguro de cargar este presupuesto? Se perderán los cambios no guardados en el presupuesto actual.')) {
+                currentBudget = JSON.parse(JSON.stringify(savedBudgets[index].budget)); // Copia profunda
+                currentBudgetIndex = index;
+                
+                budgetInput.value = currentBudget.total;
+                updateBudgetDisplay();
+                viewBudgetModal.classList.add('hidden');
+            }
+        });
+        
+        exportPdfBtn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const budget = savedBudgets[index];
+            
+            // Calcular totales
+            let totalExpenses = 0;
+            for (const categoryKey in budget.budget.categories) {
+                const category = budget.budget.categories[categoryKey];
+                category.items.forEach(item => {
+                    totalExpenses += item.amount;
+                });
+            }
+            const remaining = budget.budget.total - totalExpenses;
+            
+            // Generar PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Título
+            doc.setFontSize(22);
+            doc.setTextColor(128, 0, 128); // Púrpura
+            doc.text('Presupuesto de Boda', 105, 20, { align: 'center' });
+            
+            // Información general
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Nombre: ${budget.name}`, 20, 35);
+            doc.text(`Fecha: ${budget.date}`, 20, 42);
+            
+            if (budget.description) {
+                doc.text('Descripción:', 20, 49);
+                doc.setFontSize(12);
+                doc.text(budget.description, 20, 56);
+            }
+            
+            // Resumen financiero
+            let yPos = budget.description ? 70 : 56;
+            
+            doc.setFontSize(14);
+            doc.text('Resumen Financiero', 20, yPos);
+            yPos += 7;
+            
+            doc.setFontSize(12);
+            doc.text(`Presupuesto Total: ${formatCurrency(budget.budget.total)}`, 25, yPos);
+            yPos += 7;
+            doc.text(`Gastos Totales: ${formatCurrency(totalExpenses)}`, 25, yPos);
+            yPos += 7;
+            doc.text(`Saldo Restante: ${formatCurrency(remaining)}`, 25, yPos);
+            yPos += 15;
+            
+            // Detalles por categoría
+            doc.setFontSize(14);
+            doc.text('Detalles por Categoría', 20, yPos);
+            yPos += 10;
+            
+            for (const categoryKey in budget.budget.categories) {
+                const category = budget.budget.categories[categoryKey];
+                
+                // Solo mostrar categorías con items
+                if (category.items.length > 0) {
+                    let categoryTotal = 0;
+                    category.items.forEach(item => {
+                        categoryTotal += item.amount;
+                    });
+                    
+                    // Verificar si necesitamos una nueva página
+                    if (yPos > 250) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
+                    doc.setFontSize(13);
+                    doc.setTextColor(128, 0, 128); // Púrpura
+                    doc.text(`${category.name} - ${formatCurrency(categoryTotal)}`, 20, yPos);
+                    yPos += 7;
+                    
+                    doc.setFontSize(11);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    category.items.forEach(item => {
+                        // Verificar si necesitamos una nueva página
+                        if (yPos > 270) {
+                            doc.addPage();
+                            yPos = 20;
+                        }
+                        
+                        doc.text(`${item.name}: ${formatCurrency(item.amount)}`, 25, yPos);
+                        yPos += 6;
+                    });
+                    
+                    yPos += 5;
+                }
+            }
+            
+            // Pie de página
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`Página ${i} de ${pageCount}`, 105, 290, { align: 'center' });
+            }
+            
+            // Guardar PDF
+            doc.save(`Presupuesto_${budget.name.replace(/\s+/g, '_')}.pdf`);
+        });
+        
+        // Funciones de utilidad
+        function formatCurrency(amount) {
+            return '$' + amount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        
+        // Inicialización
+        updateBudgetDisplay();
+        updateSavedBudgetsList();
+    });
 </script>
